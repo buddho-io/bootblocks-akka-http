@@ -7,13 +7,13 @@ import akka.stream.{ActorMaterializer, Materializer}
 import com.typesafe.config.ConfigFactory
 import com.typesafe.scalalogging.StrictLogging
 import io.buddho.bootblocks.config.Config
-import io.buddho.bootblocks.modules.{ConfigModule, AkkaModule, RoutesModule}
+import io.buddho.bootblocks.modules.{RepositoryModule, AkkaModule, ConfigModule, RoutesModule}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
 
-trait RuntimeModules extends RoutesModule with AkkaModule with ConfigModule
+trait RuntimeModules extends RoutesModule with RepositoryModule with AkkaModule with ConfigModule
 
 
 class Boot extends StrictLogging {
