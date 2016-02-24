@@ -1,6 +1,8 @@
 BootBlocks Akka HTTP
 ====================
 
+[![Build Status](https://travis-ci.org/buddho-io/bootblocks-akka-http.svg?branch=master)](https://travis-ci.org/buddho-io/bootblocks-akka-http)
+
 Application Template for basic Akka HTTP service
 
 * Scopt for CLI argument processing
