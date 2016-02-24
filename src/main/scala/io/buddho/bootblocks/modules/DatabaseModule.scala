@@ -14,22 +14,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package io.buddho.bootblocks.security.json
+package io.buddho.bootblocks.modules
 
-import io.buddho.bootblocks.security.Authority
-import org.json4s.CustomSerializer
-import org.json4s.JsonAST.{JNull, JString}
+import scalikejdbc.config.DBs
+import scalikejdbc.{NamedAutoSession, DBSession}
 
 
-object SecuritySerializers {
+trait DatabaseModule {
 
-  def all = List(AuthoritySerializer)
+  lazy val dbSession: DBSession = {
+    // setup database configuration
+    DBs.setupAll()
+    NamedAutoSession('default)
+  }
+
+  def dbCloseAll(): Unit = DBs.closeAll()
 
 }
-
-case object AuthoritySerializer extends CustomSerializer[Authority](format => ({
-  case JString(s) => Authority(s)
-  case JNull => null
-}, {
-  case a: Authority => JString(a.authority)
-}))

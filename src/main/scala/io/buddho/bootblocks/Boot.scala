@@ -1,3 +1,19 @@
+// Copyright (C) 2011-2012 the original author or authors.
+// See the LICENCE.txt file distributed with this work for additional
+// information regarding copyright ownership.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package io.buddho.bootblocks
 
 import akka.actor.ActorSystem
@@ -7,13 +23,22 @@ import akka.stream.{ActorMaterializer, Materializer}
 import com.typesafe.config.ConfigFactory
 import com.typesafe.scalalogging.StrictLogging
 import io.buddho.bootblocks.config.Config
-import io.buddho.bootblocks.modules.{RepositoryModule, AkkaModule, ConfigModule, RoutesModule}
+import io.buddho.bootblocks.modules._
+import scalikejdbc.NamedDB
+import scalikejdbc.config.DBs
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
 
-trait RuntimeModules extends RoutesModule with RepositoryModule with AkkaModule with ConfigModule
+trait RuntimeModules extends RoutesModule with RepositoryModule with DatabaseModule with AkkaModule with ConfigModule {
+
+  def cleanup(): Unit = {
+    system.terminate()
+    dbCloseAll()
+  }
+
+}
 
 
 class Boot extends StrictLogging {
@@ -60,13 +85,13 @@ object Boot extends App with StrictLogging {
       logger.info(s"Server started on ${b.localAddress}")
       sys.addShutdownHook {
         b.unbind()
-        modules.system.shutdown()
+        modules.cleanup()
         logger.info("Server stopped")
       }
     case Failure(e) =>
       logger.error(s"Cannot start server.", e)
       sys.addShutdownHook {
-        modules.system.shutdown()
+        modules.cleanup()
         logger.info("Server stopped")
       }
   }

@@ -1,0 +1,10 @@
+
+postgres:
+  image: postgres:9.4
+
+  environment:
+    POSTGRES_USER: bootblox
+    POSTGRES_PASSWORD: bootblox
+
+  ports:
+    - "5432:5432"

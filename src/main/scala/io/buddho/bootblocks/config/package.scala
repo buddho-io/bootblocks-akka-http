@@ -14,22 +14,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package io.buddho.bootblocks.security.json
+package io.buddho.bootblocks
 
-import io.buddho.bootblocks.security.Authority
-import org.json4s.CustomSerializer
-import org.json4s.JsonAST.{JNull, JString}
+package object config {
 
-
-object SecuritySerializers {
-
-  def all = List(AuthoritySerializer)
+  type Host = String
+  type Port = Int
 
 }
-
-case object AuthoritySerializer extends CustomSerializer[Authority](format => ({
-  case JString(s) => Authority(s)
-  case JNull => null
-}, {
-  case a: Authority => JString(a.authority)
-}))
